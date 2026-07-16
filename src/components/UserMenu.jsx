@@ -1,5 +1,5 @@
-import { useNavigate } from 'react-router-dom'
-import { LogOut } from 'lucide-react'
+import { useNavigate, Link } from 'react-router-dom'
+import { LogOut, UserRound } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import {
   DropdownMenu,
@@ -33,6 +33,12 @@ export function UserMenu({ user }) {
       <DropdownMenuContent align="end">
         <DropdownMenuLabel className="truncate">{user.email}</DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link to="/profile">
+            <UserRound className="size-4" />
+            Thông tin cá nhân
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem onClick={handleLogout}>
           <LogOut className="size-4" />
           Đăng xuất

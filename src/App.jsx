@@ -5,6 +5,9 @@ import { MainLayout } from '@/layouts/MainLayout'
 import { Home } from '@/pages/Home'
 import { Login } from '@/pages/Login'
 import { Register } from '@/pages/Register'
+import { Profile } from '@/pages/Profile'
+import { VideoTool } from '@/pages/tools/VideoTool'
+import { TasksTool } from '@/pages/tools/TasksTool'
 
 const queryClient = new QueryClient()
 
@@ -18,6 +21,9 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/tools/video" element={<VideoTool />} />
+              <Route path="/tools/tasks" element={<TasksTool />} />
             </Route>
           </Routes>
         </BrowserRouter>
