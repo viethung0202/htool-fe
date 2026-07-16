@@ -2,10 +2,10 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { ThemeToggle } from '@/components/ThemeToggle'
 import { UserMenu } from '@/components/UserMenu'
-import { useAuth } from '@/context/AuthContext'
+import { useMe } from '@/hooks/useMe'
 
 export function Header() {
-  const { user, loading } = useAuth()
+  const { data: user, isLoading } = useMe()
 
   return (
     <header className="border-b">
@@ -17,9 +17,9 @@ export function Header() {
         <div className="flex items-center gap-2">
           <ThemeToggle />
 
-          {!loading && user && <UserMenu user={user} />}
+          {!isLoading && user && <UserMenu user={user} />}
 
-          {!loading && !user && (
+          {!isLoading && !user && (
             <>
               <Button variant="ghost" asChild>
                 <Link to="/login">Đăng nhập</Link>

@@ -9,11 +9,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import { useAuth } from '@/context/AuthContext'
+import { useLogout } from '@/hooks/useLogout'
 import { avatarColor, initials } from '@/lib/avatar'
 
 export function UserMenu({ user }) {
-  const { logout } = useAuth()
+  const { mutateAsync: logout } = useLogout()
   const navigate = useNavigate()
 
   async function handleLogout() {
