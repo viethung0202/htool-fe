@@ -119,25 +119,27 @@ export function BoardDetail() {
         </Button>
       </div>
 
-      <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
-        <SortableContext items={listIds} strategy={horizontalListSortingStrategy}>
-          <div className="mt-4 flex items-start gap-3 overflow-x-auto pb-4">
-            {board.lists.map((list) => (
-              <ListColumn
-                key={list.id}
-                list={list}
-                onDeleteList={deleteList}
-                onRenameList={handleRenameList}
-                onDeleteCard={deleteCard}
-                onCreateCard={createCard}
-                onUpdateCard={updateCard}
-              />
-            ))}
+      <div className="mt-4 overflow-x-auto rounded-xl dark:bg-gradient-to-br dark:from-indigo-950 dark:via-violet-950 dark:to-fuchsia-950 dark:p-4">
+        <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+          <SortableContext items={listIds} strategy={horizontalListSortingStrategy}>
+            <div className="flex items-start gap-3 pb-4">
+              {board.lists.map((list) => (
+                <ListColumn
+                  key={list.id}
+                  list={list}
+                  onDeleteList={deleteList}
+                  onRenameList={handleRenameList}
+                  onDeleteCard={deleteCard}
+                  onCreateCard={createCard}
+                  onUpdateCard={updateCard}
+                />
+              ))}
 
-            <AddListForm onCreate={handleCreateList} />
-          </div>
-        </SortableContext>
-      </DndContext>
+              <AddListForm onCreate={handleCreateList} />
+            </div>
+          </SortableContext>
+        </DndContext>
+      </div>
     </div>
   )
 }

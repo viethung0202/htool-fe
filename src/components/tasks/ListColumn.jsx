@@ -36,7 +36,7 @@ export function ListColumn({
     <div
       ref={setSortableRef}
       style={style}
-      className="w-72 shrink-0 rounded-xl bg-muted p-2.5 shadow-sm"
+      className="w-72 shrink-0 rounded-xl bg-muted p-2.5 shadow-sm dark:bg-neutral-900/95 dark:shadow-lg"
     >
       <div
         {...attributes}
