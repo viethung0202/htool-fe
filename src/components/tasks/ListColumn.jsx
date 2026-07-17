@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { SortableCard } from './SortableCard'
 import { AddCardForm } from './AddCardForm'
 
-export function ListColumn({ list, onDeleteList, onDeleteCard, onCreateCard }) {
+export function ListColumn({ list, onDeleteList, onDeleteCard, onCreateCard, onUpdateCard }) {
   const { setNodeRef } = useDroppable({ id: `list-${list.id}` })
   const cardIds = list.cards.map((c) => `card-${c.id}`)
 
@@ -17,7 +17,11 @@ export function ListColumn({ list, onDeleteList, onDeleteCard, onCreateCard }) {
           variant="ghost"
           size="icon-sm"
           aria-label="Xoá list"
-          onClick={() => onDeleteList(list.id)}
+          onClick={() => {
+            if (confirm(`Xoá list "${list.title}"? Toàn bộ card bên trong sẽ mất.`)) {
+              onDeleteList(list.id)
+            }
+          }}
         >
           <Trash2 className="size-4" />
         </Button>
@@ -26,7 +30,12 @@ export function ListColumn({ list, onDeleteList, onDeleteCard, onCreateCard }) {
       <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
         <div ref={setNodeRef} className="mt-2 min-h-8 space-y-2">
           {list.cards.map((card) => (
-            <SortableCard key={card.id} card={card} onDelete={onDeleteCard} />
+            <SortableCard
+              key={card.id}
+              card={card}
+              onDelete={onDeleteCard}
+              onUpdate={onUpdateCard}
+            />
           ))}
         </div>
       </SortableContext>

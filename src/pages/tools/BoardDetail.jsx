@@ -87,6 +87,7 @@ export function BoardDetail() {
               onDeleteList={deleteList}
               onDeleteCard={deleteCard}
               onCreateCard={createCard}
+              onUpdateCard={updateCard}
             />
           ))}
 

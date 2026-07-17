@@ -53,7 +53,11 @@ export function TasksTool() {
               variant="ghost"
               size="icon-sm"
               className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
-              onClick={() => deleteBoard(board.id)}
+              onClick={() => {
+                if (confirm(`Xoá board "${board.title}"? Toàn bộ list/card bên trong sẽ mất.`)) {
+                  deleteBoard(board.id)
+                }
+              }}
               aria-label="Xoá board"
             >
               <Trash2 className="size-4" />
