@@ -8,6 +8,7 @@ import { Register } from '@/pages/Register'
 import { Profile } from '@/pages/Profile'
 import { VideoTool } from '@/pages/tools/VideoTool'
 import { TasksTool } from '@/pages/tools/TasksTool'
+import { BoardDetail } from '@/pages/tools/BoardDetail'
 
 const queryClient = new QueryClient()
 
@@ -24,6 +25,7 @@ function App() {
               <Route path="/profile" element={<Profile />} />
               <Route path="/tools/video" element={<VideoTool />} />
               <Route path="/tools/tasks" element={<TasksTool />} />
+              <Route path="/tools/tasks/:boardId" element={<BoardDetail />} />
             </Route>
           </Routes>
         </BrowserRouter>
