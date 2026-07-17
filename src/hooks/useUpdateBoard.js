@@ -10,7 +10,7 @@ export function useUpdateBoard() {
       api.patch(`/api/tasks/boards/${id}`, { title }).then((res) => res.data),
     onSuccess: (_data, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['boards'] })
-      queryClient.invalidateQueries({ queryKey: ['board', String(id)] })
+      queryClient.invalidateQueries({ queryKey: ['board', id] })
     },
     onError: (error) => toastApiError(error, 'Không đổi được tên board'),
   })

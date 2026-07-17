@@ -20,7 +20,7 @@ function findListByCardId(lists, cardId) {
 }
 
 export function BoardDetail() {
-  const { boardId } = useParams()
+  const boardId = Number(useParams().boardId)
   const { data: board, isLoading } = useBoard(boardId)
   const { mutate: updateBoard } = useUpdateBoard()
   const { mutate: createList } = useCreateList(boardId)
