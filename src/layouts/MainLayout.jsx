@@ -12,7 +12,7 @@ export function MainLayout() {
       <Header />
       <div className="flex flex-1">
         {user && <Sidebar />}
-        <main className="w-full flex-1 px-4 py-8 dark:bg-gradient-to-br dark:from-indigo-950 dark:via-violet-950 dark:to-fuchsia-950">
+        <main className="w-full flex-1 px-4 py-8 dark:bg-gradient-to-br dark:from-indigo-950 dark:from-10% dark:via-fuchsia-900 dark:via-40% dark:to-pink-800">
           <Outlet />
         </main>
       </div>
