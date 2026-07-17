@@ -74,7 +74,7 @@ export function ListColumn({
       </div>
 
       <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
-        <div ref={setDropRef} className="mt-1.5 min-h-8 space-y-2 px-0.5">
+        <div ref={setDropRef} className="mt-1.5 min-h-16 space-y-2 px-0.5 pb-2">
           {list.cards.map((card) => (
             <SortableCard
               key={card.id}

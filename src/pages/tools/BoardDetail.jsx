@@ -1,6 +1,14 @@
+import { useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Pencil } from 'lucide-react'
-import { DndContext, closestCorners, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import {
+  DndContext,
+  pointerWithin,
+  rectIntersection,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { Button } from '@/components/ui/button'
 import { ListColumn } from '@/components/tasks/ListColumn'
@@ -30,6 +38,15 @@ export function BoardDetail() {
   const { mutate: updateCard } = useUpdateCard(boardId)
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
+
+  // ponytail: closestCorners hay chọn nhầm mục tiêu khi vùng thả của list rỗng/list
+  // đầy chồng lên nhau — ưu tiên "con trỏ đang nằm trong vùng nào" (pointerWithin),
+  // chỉ fallback sang rectIntersection khi con trỏ tạm thời không nằm trong vùng nào
+  // (kéo nhanh), theo đúng pattern dnd-kit khuyến nghị cho kéo thả nhiều container.
+  const collisionDetection = useCallback((args) => {
+    const pointerCollisions = pointerWithin(args)
+    return pointerCollisions.length > 0 ? pointerCollisions : rectIntersection(args)
+  }, [])
 
   function handleRenameBoard() {
     const newTitle = prompt('Tên board mới:', board.title)
@@ -120,7 +137,11 @@ export function BoardDetail() {
       </div>
 
       <div className="mt-4 overflow-x-auto">
-        <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={collisionDetection}
+          onDragEnd={handleDragEnd}
+        >
           <SortableContext items={listIds} strategy={horizontalListSortingStrategy}>
             <div className="flex items-start gap-3 pb-4">
               {board.lists.map((list) => (
