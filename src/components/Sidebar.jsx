@@ -9,7 +9,7 @@ const TOOLS = [
 
 export function Sidebar() {
   return (
-    <aside className="w-56 shrink-0 border-r">
+    <aside className="w-56 shrink-0 border-r dark:bg-indigo-950/60">
       <nav className="flex flex-col gap-1 p-3">
         {TOOLS.map(({ to, label, icon: Icon }) => (
           <NavLink

@@ -119,7 +119,7 @@ export function BoardDetail() {
         </Button>
       </div>
 
-      <div className="mt-4 overflow-x-auto rounded-xl dark:bg-gradient-to-br dark:from-indigo-950 dark:via-violet-950 dark:to-fuchsia-950 dark:p-4">
+      <div className="mt-4 overflow-x-auto">
         <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
           <SortableContext items={listIds} strategy={horizontalListSortingStrategy}>
             <div className="flex items-start gap-3 pb-4">
