@@ -1,10 +1,11 @@
 import { NavLink } from 'react-router-dom'
-import { Video, KanbanSquare } from 'lucide-react'
+import { Video, KanbanSquare, Sparkles } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const TOOLS = [
   { to: '/tools/video', label: 'Video', icon: Video },
   { to: '/tools/tasks', label: 'Công việc', icon: KanbanSquare },
+  { to: '/tools/content', label: 'Content', icon: Sparkles },
 ]
 
 export function Sidebar() {

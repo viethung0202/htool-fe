@@ -10,6 +10,7 @@ import { Profile } from '@/pages/Profile'
 import { VideoTool } from '@/pages/tools/VideoTool'
 import { TasksTool } from '@/pages/tools/TasksTool'
 import { BoardDetail } from '@/pages/tools/BoardDetail'
+import { ContentTool } from '@/pages/tools/ContentTool'
 
 const queryClient = new QueryClient()
 
@@ -28,6 +29,7 @@ function App() {
               <Route path="/tools/video" element={<VideoTool />} />
               <Route path="/tools/tasks" element={<TasksTool />} />
               <Route path="/tools/tasks/:boardId" element={<BoardDetail />} />
+              <Route path="/tools/content" element={<ContentTool />} />
             </Route>
           </Routes>
         </BrowserRouter>
