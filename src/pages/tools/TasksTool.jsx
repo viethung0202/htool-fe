@@ -1,23 +1,32 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { Trash2 } from 'lucide-react'
+import { Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import { useBoards } from '@/hooks/useBoards'
 import { useCreateBoard } from '@/hooks/useCreateBoard'
 import { useDeleteBoard } from '@/hooks/useDeleteBoard'
+import { useUpdateBoard } from '@/hooks/useUpdateBoard'
 
 export function TasksTool() {
   const [title, setTitle] = useState('')
   const { data: boards, isLoading } = useBoards()
   const { mutate: createBoard, isPending } = useCreateBoard()
   const { mutate: deleteBoard } = useDeleteBoard()
+  const { mutate: updateBoard } = useUpdateBoard()
 
   function handleCreate(e) {
     e.preventDefault()
     if (!title.trim()) return
     createBoard(title, { onSuccess: () => setTitle('') })
+  }
+
+  function handleRename(board) {
+    const newTitle = prompt('Tên board mới:', board.title)
+    if (newTitle?.trim() && newTitle !== board.title) {
+      updateBoard({ id: board.id, title: newTitle })
+    }
   }
 
   return (
@@ -46,22 +55,31 @@ export function TasksTool() {
           <Card key={board.id} className="group relative">
             <Link to={`/tools/tasks/${board.id}`}>
               <CardHeader>
-                <CardTitle className="truncate">{board.title}</CardTitle>
+                <CardTitle className="truncate pr-12">{board.title}</CardTitle>
               </CardHeader>
             </Link>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100"
-              onClick={() => {
-                if (confirm(`Xoá board "${board.title}"? Toàn bộ list/card bên trong sẽ mất.`)) {
-                  deleteBoard(board.id)
-                }
-              }}
-              aria-label="Xoá board"
-            >
-              <Trash2 className="size-4" />
-            </Button>
+            <div className="absolute top-2 right-2 flex opacity-0 group-hover:opacity-100">
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => handleRename(board)}
+                aria-label="Đổi tên board"
+              >
+                <Pencil className="size-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => {
+                  if (confirm(`Xoá board "${board.title}"? Toàn bộ list/card bên trong sẽ mất.`)) {
+                    deleteBoard(board.id)
+                  }
+                }}
+                aria-label="Xoá board"
+              >
+                <Trash2 className="size-4" />
+              </Button>
+            </div>
           </Card>
         ))}
       </div>

@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, Pencil } from 'lucide-react'
 import { DndContext, closestCorners, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
+import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
+import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { ListColumn } from '@/components/tasks/ListColumn'
 import { useBoard } from '@/hooks/useBoard'
+import { useUpdateBoard } from '@/hooks/useUpdateBoard'
 import { useCreateList } from '@/hooks/useCreateList'
+import { useUpdateList } from '@/hooks/useUpdateList'
 import { useDeleteList } from '@/hooks/useDeleteList'
 import { useCreateCard } from '@/hooks/useCreateCard'
 import { useDeleteCard } from '@/hooks/useDeleteCard'
@@ -18,7 +22,9 @@ function findListByCardId(lists, cardId) {
 export function BoardDetail() {
   const { boardId } = useParams()
   const { data: board, isLoading } = useBoard(boardId)
+  const { mutate: updateBoard } = useUpdateBoard()
   const { mutate: createList } = useCreateList(boardId)
+  const { mutate: updateList } = useUpdateList(boardId)
   const { mutate: deleteList } = useDeleteList(boardId)
   const { mutate: createCard } = useCreateCard(boardId)
   const { mutate: deleteCard } = useDeleteCard(boardId)
@@ -26,6 +32,20 @@ export function BoardDetail() {
   const [newListTitle, setNewListTitle] = useState('')
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
+
+  function handleRenameBoard() {
+    const newTitle = prompt('Tên board mới:', board.title)
+    if (newTitle?.trim() && newTitle !== board.title) {
+      updateBoard({ id: board.id, title: newTitle })
+    }
+  }
+
+  function handleRenameList(list) {
+    const newTitle = prompt('Tên list mới:', list.title)
+    if (newTitle?.trim() && newTitle !== list.title) {
+      updateList({ id: list.id, title: newTitle })
+    }
+  }
 
   function handleCreateList(e) {
     e.preventDefault()
@@ -38,21 +58,35 @@ export function BoardDetail() {
     const { active, over } = event
     if (!over) return
 
-    const cardId = Number(String(active.id).replace('card-', ''))
+    const activeId = String(active.id)
+    const overId = String(over.id)
+
+    if (activeId.startsWith('list-')) {
+      if (!overId.startsWith('list-')) return
+      const activeListId = Number(activeId.replace('list-', ''))
+      const overListId = Number(overId.replace('list-', ''))
+      if (activeListId === overListId) return
+      const position = board.lists.findIndex((l) => l.id === overListId)
+      updateList({ id: activeListId, position })
+      return
+    }
+
+    const cardId = Number(activeId.replace('card-', ''))
     const sourceList = findListByCardId(board.lists, cardId)
     if (!sourceList) return
 
-    const overId = String(over.id)
     let targetList
     let position
 
-    if (overId.startsWith('list-')) {
-      targetList = board.lists.find((l) => l.id === Number(overId.replace('list-', '')))
+    if (overId.startsWith('listdrop-')) {
+      targetList = board.lists.find((l) => l.id === Number(overId.replace('listdrop-', '')))
       position = targetList.cards.length
-    } else {
+    } else if (overId.startsWith('card-')) {
       const overCardId = Number(overId.replace('card-', ''))
       targetList = findListByCardId(board.lists, overCardId)
       position = targetList.cards.findIndex((c) => c.id === overCardId)
+    } else {
+      return
     }
 
     if (!targetList) return
@@ -67,6 +101,8 @@ export function BoardDetail() {
   if (isLoading) return <p className="text-sm text-muted-foreground">Đang tải...</p>
   if (!board) return <p className="text-sm text-muted-foreground">Không tìm thấy board.</p>
 
+  const listIds = board.lists.map((l) => `list-${l.id}`)
+
   return (
     <div>
       <Link
@@ -76,29 +112,42 @@ export function BoardDetail() {
         <ArrowLeft className="size-4" />
         Quay lại
       </Link>
-      <h1 className="mt-2 text-xl font-semibold">{board.title}</h1>
+      <div className="mt-2 flex items-center gap-1">
+        <h1 className="text-xl font-semibold">{board.title}</h1>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label="Đổi tên board"
+          onClick={handleRenameBoard}
+        >
+          <Pencil className="size-4" />
+        </Button>
+      </div>
 
       <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
-        <div className="mt-4 flex gap-4 overflow-x-auto pb-4">
-          {board.lists.map((list) => (
-            <ListColumn
-              key={list.id}
-              list={list}
-              onDeleteList={deleteList}
-              onDeleteCard={deleteCard}
-              onCreateCard={createCard}
-              onUpdateCard={updateCard}
-            />
-          ))}
+        <SortableContext items={listIds} strategy={horizontalListSortingStrategy}>
+          <div className="mt-4 flex gap-4 overflow-x-auto pb-4">
+            {board.lists.map((list) => (
+              <ListColumn
+                key={list.id}
+                list={list}
+                onDeleteList={deleteList}
+                onRenameList={handleRenameList}
+                onDeleteCard={deleteCard}
+                onCreateCard={createCard}
+                onUpdateCard={updateCard}
+              />
+            ))}
 
-          <form onSubmit={handleCreateList} className="w-64 shrink-0">
-            <Input
-              placeholder="Thêm list mới..."
-              value={newListTitle}
-              onChange={(e) => setNewListTitle(e.target.value)}
-            />
-          </form>
-        </div>
+            <form onSubmit={handleCreateList} className="w-64 shrink-0">
+              <Input
+                placeholder="Thêm list mới..."
+                value={newListTitle}
+                onChange={(e) => setNewListTitle(e.target.value)}
+              />
+            </form>
+          </div>
+        </SortableContext>
       </DndContext>
     </div>
   )
