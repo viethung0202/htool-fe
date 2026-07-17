@@ -1,11 +1,10 @@
-import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, Pencil } from 'lucide-react'
 import { DndContext, closestCorners, PointerSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { SortableContext, horizontalListSortingStrategy } from '@dnd-kit/sortable'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { ListColumn } from '@/components/tasks/ListColumn'
+import { AddListForm } from '@/components/tasks/AddListForm'
 import { useBoard } from '@/hooks/useBoard'
 import { useUpdateBoard } from '@/hooks/useUpdateBoard'
 import { useCreateList } from '@/hooks/useCreateList'
@@ -29,7 +28,6 @@ export function BoardDetail() {
   const { mutate: createCard } = useCreateCard(boardId)
   const { mutate: deleteCard } = useDeleteCard(boardId)
   const { mutate: updateCard } = useUpdateCard(boardId)
-  const [newListTitle, setNewListTitle] = useState('')
 
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 4 } }))
 
@@ -47,11 +45,8 @@ export function BoardDetail() {
     }
   }
 
-  function handleCreateList(e) {
-    e.preventDefault()
-    if (!newListTitle.trim()) return
-    createList({ title: newListTitle, position: board?.lists.length ?? 0 })
-    setNewListTitle('')
+  function handleCreateList(title) {
+    createList({ title, position: board?.lists.length ?? 0 })
   }
 
   function handleDragEnd(event) {
@@ -126,7 +121,7 @@ export function BoardDetail() {
 
       <DndContext sensors={sensors} collisionDetection={closestCorners} onDragEnd={handleDragEnd}>
         <SortableContext items={listIds} strategy={horizontalListSortingStrategy}>
-          <div className="mt-4 flex gap-4 overflow-x-auto pb-4">
+          <div className="mt-4 flex items-start gap-3 overflow-x-auto pb-4">
             {board.lists.map((list) => (
               <ListColumn
                 key={list.id}
@@ -139,13 +134,7 @@ export function BoardDetail() {
               />
             ))}
 
-            <form onSubmit={handleCreateList} className="w-64 shrink-0">
-              <Input
-                placeholder="Thêm list mới..."
-                value={newListTitle}
-                onChange={(e) => setNewListTitle(e.target.value)}
-              />
-            </form>
+            <AddListForm onCreate={handleCreateList} />
           </div>
         </SortableContext>
       </DndContext>

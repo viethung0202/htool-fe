@@ -8,6 +8,7 @@ import { useBoards } from '@/hooks/useBoards'
 import { useCreateBoard } from '@/hooks/useCreateBoard'
 import { useDeleteBoard } from '@/hooks/useDeleteBoard'
 import { useUpdateBoard } from '@/hooks/useUpdateBoard'
+import { avatarColor } from '@/lib/avatar'
 
 export function TasksTool() {
   const [title, setTitle] = useState('')
@@ -52,9 +53,13 @@ export function TasksTool() {
 
       <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4">
         {boards?.map((board) => (
-          <Card key={board.id} className="group relative">
+          <Card
+            key={board.id}
+            className="group relative overflow-hidden py-0 shadow-sm transition-shadow hover:shadow-md"
+          >
+            <div className={`h-1.5 ${avatarColor(board.title)}`} />
             <Link to={`/tools/tasks/${board.id}`}>
-              <CardHeader>
+              <CardHeader className="py-3">
                 <CardTitle className="truncate pr-12">{board.title}</CardTitle>
               </CardHeader>
             </Link>

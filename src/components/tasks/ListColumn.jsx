@@ -1,7 +1,7 @@
 import { useDroppable } from '@dnd-kit/core'
 import { useSortable, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { Pencil, Trash2 } from 'lucide-react'
+import { GripVertical, Pencil, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { SortableCard } from './SortableCard'
 import { AddCardForm } from './AddCardForm'
@@ -36,15 +36,18 @@ export function ListColumn({
     <div
       ref={setSortableRef}
       style={style}
-      className="w-64 shrink-0 rounded-lg border bg-muted/30 p-3"
+      className="w-72 shrink-0 rounded-xl bg-muted p-2.5 shadow-sm"
     >
       <div
         {...attributes}
         {...listeners}
-        className="flex cursor-grab items-center justify-between active:cursor-grabbing"
+        className="flex cursor-grab items-center justify-between gap-1 rounded-md px-1.5 py-1 active:cursor-grabbing"
       >
-        <h2 className="text-sm font-semibold">{list.title}</h2>
-        <div className="flex">
+        <div className="flex min-w-0 items-center gap-1.5">
+          <GripVertical className="size-4 shrink-0 text-muted-foreground" />
+          <h2 className="truncate text-sm font-semibold">{list.title}</h2>
+        </div>
+        <div className="flex shrink-0">
           <Button
             variant="ghost"
             size="icon-sm"
@@ -71,7 +74,7 @@ export function ListColumn({
       </div>
 
       <SortableContext items={cardIds} strategy={verticalListSortingStrategy}>
-        <div ref={setDropRef} className="mt-2 min-h-8 space-y-2">
+        <div ref={setDropRef} className="mt-1.5 min-h-8 space-y-2 px-0.5">
           {list.cards.map((card) => (
             <SortableCard
               key={card.id}
@@ -83,7 +86,9 @@ export function ListColumn({
         </div>
       </SortableContext>
 
-      <AddCardForm listId={list.id} position={list.cards.length} onCreate={onCreateCard} />
+      <div className="px-0.5">
+        <AddCardForm listId={list.id} position={list.cards.length} onCreate={onCreateCard} />
+      </div>
     </div>
   )
 }

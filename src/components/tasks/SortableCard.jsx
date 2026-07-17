@@ -58,11 +58,11 @@ export function SortableCard({ card, onDelete, onUpdate }) {
         {...attributes}
         {...listeners}
         onClick={() => setOpen(true)}
-        className="cursor-grab rounded-md border bg-background p-2 active:cursor-grabbing"
+        className="cursor-grab rounded-lg border bg-card p-3 shadow-sm transition-shadow hover:shadow-md active:cursor-grabbing"
       >
-        <p className="text-sm">{card.title}</p>
+        <p className="text-sm leading-snug">{card.title}</p>
         {card.description && (
-          <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{card.description}</p>
+          <p className="mt-1.5 line-clamp-2 text-xs text-muted-foreground">{card.description}</p>
         )}
       </div>
 

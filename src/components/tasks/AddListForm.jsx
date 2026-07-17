@@ -3,14 +3,14 @@ import { Plus, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 
-export function AddCardForm({ listId, position, onCreate }) {
+export function AddListForm({ onCreate }) {
   const [isAdding, setIsAdding] = useState(false)
   const [title, setTitle] = useState('')
 
   function handleSubmit(e) {
     e.preventDefault()
     if (!title.trim()) return
-    onCreate({ title, position, listId })
+    onCreate(title)
     setTitle('')
   }
 
@@ -23,25 +23,26 @@ export function AddCardForm({ listId, position, onCreate }) {
     return (
       <Button
         variant="ghost"
-        size="sm"
         onClick={() => setIsAdding(true)}
-        className="mt-1 w-full justify-start text-muted-foreground"
+        className="h-fit w-72 shrink-0 justify-start text-muted-foreground"
       >
         <Plus className="size-4" />
-        Thêm card
+        Thêm list
       </Button>
     )
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-1 space-y-1.5">
+    <form
+      onSubmit={handleSubmit}
+      className="w-72 shrink-0 space-y-1.5 rounded-xl bg-muted p-2.5 shadow-sm"
+    >
       <Input
         autoFocus
-        placeholder="Nhập tên card..."
+        placeholder="Nhập tên list..."
         value={title}
         onChange={(e) => setTitle(e.target.value)}
         onKeyDown={(e) => e.key === 'Escape' && close()}
-        className="h-8 text-sm"
       />
       <div className="flex gap-1">
         <Button type="submit" size="sm">
